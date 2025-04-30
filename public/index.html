@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas Schubin | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="nav-container">
+        <nav class="main-nav">
+            <div class="logo">
+                <a href="index.html">Lucas Schubin</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="games/index.html">Games</a></li>
+                <li><a href="projects/index.html">Projects</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content reveal-element">
+                <h1>Lucas Schubin</h1>
+                <p class="tagline">I build games that teach, tools that help, and interfaces that feel alive.</p>
+                <div class="cta-buttons">
+                    <a href="games/index.html" class="cta-button primary">Explore Games</a>
+                    <a href="projects/index.html" class="cta-button secondary">View Projects</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-section reveal-element">
+            <h2>Featured Games</h2>
+            <div class="tiles-container">
+                <a href="games/geography/" class="tile game-tile" data-title="Geography Sprint">
+                    <div class="tile-content">
+                        <h3>Geography Sprint</h3>
+                        <p>A country-naming challenge against the clock</p>
+                    </div>
+                    <div class="code-reveal"></div>
+                </a>
+                <a href="games/elementle/" class="tile game-tile" data-title="Elementle">
+                    <div class="tile-content">
+                        <h3>Elementle</h3>
+                        <p>A chemistry-themed word game with a twist</p>
+                    </div>
+                    <div class="code-reveal"></div>
+                </a>
+            </div>
+        </section>
+
+        <section class="featured-section reveal-element">
+            <h2>Featured Projects</h2>
+            <div class="tiles-container">
+                <a href="projects/timer/" class="tile project-tile" data-title="Timer Tool">
+                    <div class="tile-content">
+                        <h3>Timer Tool</h3>
+                        <p>A sleek, customizable timer for focus sessions</p>
+                    </div>
+                    <div class="code-reveal"></div>
+                </a>
+                <a href="projects/calculator/" class="tile project-tile" data-title="Advanced Calculator">
+                    <div class="tile-content">
+                        <h3>Advanced Calculator</h3>
+                        <p>More than just numbers - a complete math toolkit</p>
+                    </div>
+                    <div class="code-reveal"></div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="reveal-element">
+        <p>&copy; 2024 Lucas Schubin. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
