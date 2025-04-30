@@ -27,6 +27,73 @@
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     position: relative;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Error pulse effect for wrong answers */
+.geo-game-container.error-pulse {
+    box-shadow: 0 0 0 1px var(--geo-error), 0 0 15px rgba(239, 68, 68, 0.5);
+    animation: errorPulse 0.8s ease-out;
+}
+
+@keyframes errorPulse {
+    0% {
+        box-shadow: 0 0 0 1px var(--geo-error), 0 0 5px rgba(239, 68, 68, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 1px var(--geo-error), 0 0 20px rgba(239, 68, 68, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 0 1px var(--geo-error), 0 0 5px rgba(239, 68, 68, 0.3);
+    }
+}
+
+/* Time penalty particle animation */
+.time-penalty {
+    position: absolute;
+    color: var(--geo-error);
+    font-weight: 700;
+    font-size: 1.2rem;
+    animation: penaltyParticle 1.5s ease-out forwards;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+@keyframes penaltyParticle {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(0);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1.2) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1) translateY(-30px);
+    }
+}
+
+/* Timer penalty flash */
+.timer-display.penalty-flash {
+    animation: timerPenaltyFlash 0.8s ease-out;
+}
+
+@keyframes timerPenaltyFlash {
+    0% {
+        color: var(--text-color);
+        text-shadow: none;
+    }
+    30% {
+        color: var(--geo-error);
+        text-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    }
+    100% {
+        color: var(--text-color);
+        text-shadow: none;
+    }
 }
 
 /* Timer ring around the game container */
@@ -55,9 +122,8 @@
     mask-composite: exclude;
     -webkit-mask-composite: source-out;
     padding: var(--timer-ring-size);
-    transform: rotate(0deg);
     transform-origin: center;
-    transition: background 0.5s ease;
+    transition: background 0.5s ease, padding 1s linear;
     animation: pulse 2s infinite alternate;
 }
 
@@ -233,35 +299,7 @@
     overflow: hidden;
 }
 
-/* Pixel art for Earth */
-.earth-pixel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        /* Americas */
-        radial-gradient(circle at 25% 40%, var(--geo-accent) 0%, var(--geo-accent) 8%, transparent 8.5%),
-        /* Europe/Africa */
-        radial-gradient(circle at 55% 40%, var(--geo-accent) 0%, var(--geo-accent) 8%, transparent 8.5%),
-        /* Asia/Australia */
-        radial-gradient(circle at 75% 50%, var(--geo-accent) 0%, var(--geo-accent) 7%, transparent 7.5%);
-}
-
-/* Pixel grid overlay */
-.earth-pixel::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: var(--pixel-size) var(--pixel-size);
-}
+/* Pixel art for Earth is now handled dynamically via JavaScript */
 
 @keyframes float {
     0%, 100% {

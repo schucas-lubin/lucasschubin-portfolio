@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
         baseTime: 0,
         timerInterval: null,
         gameActive: false,
-        hintsShown: false
+        hintsShown: false,
+        earthColors: generateEarthColors() // Store current earth colors
     };
 
     // DOM Elements
@@ -35,8 +36,96 @@ document.addEventListener('DOMContentLoaded', () => {
         playAgainButton: document.getElementById('play-again-button'),
         countryHints: document.getElementById('country-hints'),
         randomLetterBtn: document.getElementById('random-letter-btn'),
-        timerRingFill: document.querySelector('.timer-ring-fill')
+        timerRingFill: document.querySelector('.timer-ring-fill'),
+        gameContainer: document.querySelector('.geo-game-container'),
+        earthPixel: document.querySelector('.earth-pixel'),
+        timerDisplay: document.querySelector('.timer-display')
     };
+
+    // Generate random colors for Earth land masses
+    function generateEarthColors() {
+        // Generate colors in green/teal spectrum for land masses
+        const baseHue = 120 + Math.floor(Math.random() * 60); // 120-180 (green to teal)
+        const saturation = 50 + Math.floor(Math.random() * 30); // 50-80%
+        const lightness = 30 + Math.floor(Math.random() * 20); // 30-50%
+
+        return {
+            primary: `hsl(${baseHue}, ${saturation}%, ${lightness}%)`,
+            secondary: `hsl(${baseHue + 10}, ${saturation - 10}%, ${lightness + 10}%)`,
+            tertiary: `hsl(${baseHue - 10}, ${saturation + 5}%, ${lightness - 5}%)`
+        };
+    }
+
+    // Apply Earth colors and add clouds/poles
+    function updateEarthAppearance() {
+        const colors = gameState.earthColors;
+        let style = `
+            .earth-pixel::before {
+                background-image: 
+                    /* Americas */
+                    radial-gradient(circle at 25% 40%, ${colors.primary} 0%, ${colors.primary} 8%, transparent 8.5%),
+                    /* Europe/Africa */
+                    radial-gradient(circle at 55% 40%, ${colors.secondary} 0%, ${colors.secondary} 8%, transparent 8.5%),
+                    /* Asia/Australia */
+                    radial-gradient(circle at 75% 50%, ${colors.tertiary} 0%, ${colors.tertiary} 7%, transparent 7.5%),
+                    /* North pole */
+                    radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 10%, transparent 10.5%),
+                    /* South pole */
+                    radial-gradient(circle at 50% 85%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 8%, transparent 8.5%);
+            }
+            
+            /* Add clouds */
+            .earth-pixel::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: 
+                    /* Pixel grid */
+                    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                    /* Cloud 1 */
+                    radial-gradient(circle at ${20 + Math.random() * 60}% ${20 + Math.random() * 60}%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.4) 3%, transparent 3.5%),
+                    /* Cloud 2 */
+                    radial-gradient(circle at ${20 + Math.random() * 60}% ${20 + Math.random() * 60}%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 4%, transparent 4.5%),
+                    /* Cloud 3 */
+                    radial-gradient(circle at ${20 + Math.random() * 60}% ${20 + Math.random() * 60}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.35) 2.5%, transparent 3%);
+                background-size: var(--pixel-size) var(--pixel-size), var(--pixel-size) var(--pixel-size), auto, auto, auto;
+            }
+        `;
+        
+        // Create or update the style element
+        let styleEl = document.getElementById('earth-dynamic-style');
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = 'earth-dynamic-style';
+            document.head.appendChild(styleEl);
+        }
+        styleEl.textContent = style;
+    }
+
+    // Create time penalty particle effect
+    function createTimePenaltyEffect() {
+        const penaltyEl = document.createElement('div');
+        penaltyEl.classList.add('time-penalty');
+        penaltyEl.textContent = '-2';
+        
+        // Position next to timer
+        const timerRect = elements.timerDisplay.getBoundingClientRect();
+        const containerRect = elements.gameContainer.getBoundingClientRect();
+        
+        penaltyEl.style.left = `${timerRect.right - containerRect.left + 5}px`;
+        penaltyEl.style.top = `${timerRect.top - containerRect.top}px`;
+        
+        elements.gameContainer.appendChild(penaltyEl);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+            penaltyEl.remove();
+        }, 1500);
+    }
 
     // Initialize game with selected letter
     function initGame(letter = 'A') {
@@ -44,6 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.countriesForLetter = countriesByLetter[letter] || [];
         gameState.namedCountries = [];
         gameState.hintsShown = false;
+        
+        // Generate new earth colors if this was triggered by random letter button
+        if (letter !== 'A' || !document.getElementById('earth-dynamic-style')) {
+            gameState.earthColors = generateEarthColors();
+            updateEarthAppearance();
+        }
         
         // Update UI
         elements.currentLetterEl.textContent = letter;
@@ -63,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear any existing hints
         elements.countryHints.innerHTML = '';
         
-        // Reset timer ring color
+        // Reset timer ring color and size
+        elements.timerRingFill.style.padding = '8px'; // Initial ring size
         updateTimerRing();
         
         // Focus the input field
@@ -113,6 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateTimerRing() {
         const timePercentage = gameState.timeLeft / gameState.baseTime;
         
+        // Shrink the ring as time decreases - from 8px to 2px
+        const ringSize = Math.max(2, Math.round(8 * timePercentage));
+        elements.timerRingFill.style.padding = `${ringSize}px`;
+        
         // Change timer ring color based on time percentage
         if (timePercentage <= 0.25) {
             elements.timerRingFill.style.background = 'linear-gradient(to right, #ef4444, #f59e0b)';
@@ -127,6 +227,31 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.timerRingFill.style.background = 'linear-gradient(to right, #10b981, #22d3ee)';
             elements.timerRingFill.classList.remove('urgent');
         }
+    }
+
+    // Flash timer for wrong answer
+    function flashTimerPenalty() {
+        elements.timerDisplay.classList.add('penalty-flash');
+        setTimeout(() => {
+            elements.timerDisplay.classList.remove('penalty-flash');
+        }, 800);
+    }
+
+    // Show a pulse effect for wrong answers
+    function showErrorPulse() {
+        elements.gameContainer.classList.add('error-pulse');
+        setTimeout(() => {
+            elements.gameContainer.classList.remove('error-pulse');
+        }, 800);
+    }
+
+    // Apply a time penalty
+    function applyTimePenalty() {
+        gameState.timeLeft = Math.max(1, gameState.timeLeft - 2);
+        updateTimerDisplay();
+        updateTimerRing();
+        flashTimerPenalty();
+        createTimePenaltyEffect();
     }
 
     // Update the timer display
@@ -267,6 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
             return false;
         } else {
+            // Wrong answer - show error and apply time penalty
+            elements.countryInput.classList.add('error');
+            setTimeout(() => {
+                elements.countryInput.classList.remove('error');
+            }, 500);
+            
+            // Show error pulse
+            showErrorPulse();
+            
+            // Apply time penalty
+            applyTimePenalty();
+            
             return false;
         }
     }
@@ -281,7 +418,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const countryName = elements.countryInput.value;
         if (countryName.trim()) {
-            checkCountry(countryName);
+            if (checkCountry(countryName)) {
+                // Correct answer, do nothing special
+            } else {
+                // Error handled in checkCountry function
+            }
         }
     });
     
