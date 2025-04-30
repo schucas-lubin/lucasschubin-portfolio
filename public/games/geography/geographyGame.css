@@ -2,4 +2,503 @@
  * Geography Sprint Game Styles
  */
 
-/* Game-specific styles will be added here */ 
+/* Game-specific variables */
+:root {
+    --geo-primary: #3b82f6;
+    --geo-secondary: #22d3ee;
+    --geo-accent: #10b981;
+    --geo-dark: #0f172a;
+    --geo-light: #e2e8f0;
+    --geo-error: #ef4444;
+    --geo-success: #22c55e;
+    --geo-warning: #f59e0b;
+    --pixel-size: 4px;
+}
+
+/* Main game container */
+.geo-game-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Game header with timer */
+.geo-game-header {
+    background-color: var(--geo-dark);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.game-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--geo-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.timer-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.timer-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    min-width: 80px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.timer-button {
+    background: none;
+    border: none;
+    color: var(--geo-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.timer-button:hover {
+    color: var(--geo-light);
+}
+
+.timer-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.timer-progress-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to right, var(--geo-accent), var(--geo-secondary));
+    transition: width 1s linear;
+}
+
+/* Game content area */
+.geo-game-content {
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    min-height: 350px;
+}
+
+/* Earth graphic and letter display */
+.earth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    position: relative;
+}
+
+.earth-graphic {
+    width: 180px;
+    height: 180px;
+    position: relative;
+    animation: float 5s ease-in-out infinite;
+}
+
+.earth-pixel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--geo-primary);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pixel art for Earth */
+.earth-pixel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        /* Americas */
+        radial-gradient(circle at 25% 40%, var(--geo-accent) 0%, var(--geo-accent) 8%, transparent 8.5%),
+        /* Europe/Africa */
+        radial-gradient(circle at 55% 40%, var(--geo-accent) 0%, var(--geo-accent) 8%, transparent 8.5%),
+        /* Asia/Australia */
+        radial-gradient(circle at 75% 50%, var(--geo-accent) 0%, var(--geo-accent) 7%, transparent 7.5%);
+}
+
+/* Pixel grid overlay */
+.earth-pixel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: var(--pixel-size) var(--pixel-size);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.current-letter-display {
+    margin-top: 2rem;
+    background-color: var(--geo-dark);
+    border: 2px solid var(--geo-secondary);
+    border-radius: 8px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+}
+
+#current-letter {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--geo-light);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Countries list section */
+.countries-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(15, 23, 42, 0.5);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    max-height: 300px;
+}
+
+.countries-list h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--geo-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#countries-counter {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+}
+
+#named-countries {
+    list-style-type: none;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 0.5rem;
+}
+
+#named-countries li {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+#named-countries li::before {
+    content: '•';
+    color: var(--geo-accent);
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom scrollbar for country list */
+#named-countries::-webkit-scrollbar {
+    width: 6px;
+}
+
+#named-countries::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+#named-countries::-webkit-scrollbar-thumb {
+    background-color: var(--geo-secondary);
+    border-radius: 3px;
+}
+
+/* Game input section */
+.geo-game-input {
+    padding: 1.5rem;
+    background-color: var(--geo-dark);
+    border-top: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+#country-form {
+    display: flex;
+    gap: 1rem;
+}
+
+#country-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    border: 2px solid transparent;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+#country-input:focus {
+    outline: none;
+    border-color: var(--geo-secondary);
+    box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.3);
+}
+
+#country-input.error {
+    border-color: var(--geo-error);
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+#submit-button {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(to right, var(--geo-primary), var(--geo-secondary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+#submit-button:active {
+    transform: translateY(0);
+}
+
+/* Game results overlay */
+.game-results {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+}
+
+.game-results.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.game-results h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--geo-secondary);
+    text-align: center;
+}
+
+#results-message {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 600px;
+}
+
+#missed-countries {
+    margin: 1rem 0 2rem;
+    width: 100%;
+    max-width: 400px;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+#missed-countries .missed-country {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+#play-again-button {
+    padding: 0.8rem 2rem;
+    background: linear-gradient(to right, var(--geo-primary), var(--geo-secondary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#play-again-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Country hints that appear in the background */
+.country-hints {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.hint-country {
+    position: absolute;
+    color: var(--geo-secondary);
+    opacity: 0.2;
+    font-size: 1.4rem;
+    white-space: nowrap;
+    text-shadow: 0 0 10px var(--geo-secondary);
+    animation: floatHint 20s linear infinite;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes floatHint {
+    0% {
+        transform: translateY(0) rotate(-2deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.2;
+    }
+    90% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-100px) rotate(2deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .geo-game-content {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+    
+    .earth-graphic {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .countries-list {
+        max-height: 180px;
+    }
+    
+    #country-form {
+        flex-direction: column;
+    }
+    
+    #submit-button {
+        padding: 0.8rem;
+    }
+    
+    .game-results h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .geo-game-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 1rem 1.5rem;
+    }
+    
+    .timer-settings {
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .timer-display {
+        min-width: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .earth-graphic {
+        width: 120px;
+        height: 120px;
+    }
+} 

@@ -25,6 +25,8 @@ body {
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
 }
 
 h1, h2, h3 {
@@ -36,6 +38,65 @@ a {
     text-decoration: none;
     color: inherit;
     transition: color var(--transition-speed) ease;
+}
+
+/* Background Animation */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-cell {
+    position: absolute;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.bg-cell.interactive {
+    pointer-events: auto;
+    cursor: pointer;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bg-cell.panel-3d {
+    background: linear-gradient(135deg, 
+                rgba(40, 45, 60, 0.6), 
+                rgba(20, 25, 35, 0.8));
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-cell.panel-3d:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cell-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    filter: blur(8px);
+    z-index: 1;
+}
+
+/* Make sure the main content appears above the background */
+main, header, footer {
+    position: relative;
+    z-index: 1;
 }
 
 /* Navigation */
@@ -161,6 +222,17 @@ a {
     justify-content: center;
 }
 
+/* CTA Button Typing Effect */
+.cta-typing-container {
+    max-width: 600px;
+    width: 100%;
+    min-height: 200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .cta-button {
     display: inline-block;
     padding: 0.8rem 1.8rem;
@@ -171,7 +243,11 @@ a {
     position: relative;
     overflow: hidden;
     z-index: 1;
-    transition: all var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease, 
+                opacity 0.5s ease, 
+                visibility 0.5s ease;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .cta-button::before {
@@ -260,7 +336,17 @@ a {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease, 
+                opacity 0.5s ease,
+                filter 0.5s ease;
+    /* Start with lower opacity for fade-in effect */
+    opacity: 0.6;
+    filter: blur(0px);
+}
+
+.tile.visible {
+    opacity: 1;
+    filter: blur(0px);
 }
 
 .tile::before {
@@ -321,6 +407,40 @@ a {
     justify-content: center;
     opacity: 0;
     z-index: -1;
+    transition: opacity 0.3s ease, z-index 0s 0.3s;
+}
+
+/* Code Container Styles */
+.code-container {
+    font-family: 'JetBrains Mono', monospace;
+    color: #a3acb9;
+    font-size: 0.8rem;
+    text-align: left;
+    width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+    padding: 1rem;
+    background-color: rgba(10, 10, 15, 0.8);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-line {
+    margin-bottom: 0.2rem;
+    white-space: pre;
+}
+
+/* Add syntax highlighting colors for better readability */
+.code-line {
+    color: #a4b1cd; /* Default color */
+}
+
+.code-line:nth-child(3n) {
+    color: var(--accent-color);
+}
+
+.code-line:nth-child(3n+1) {
+    color: var(--accent-secondary);
 }
 
 /* Gallery Pages Styles */
@@ -361,7 +481,9 @@ a {
     background: var(--card-bg);
     border-radius: var(--border-radius);
     overflow: hidden;
-    transition: all var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease,
+                opacity 0.5s ease,
+                filter 0.5s ease;
     height: 280px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -369,6 +491,14 @@ a {
     justify-content: center;
     text-align: center;
     position: relative;
+    /* Start with lower opacity for fade-in effect */
+    opacity: 0.6;
+    filter: blur(0px);
+}
+
+.gallery-item.visible {
+    opacity: 1;
+    filter: blur(0px);
 }
 
 .gallery-item:hover {
@@ -411,6 +541,7 @@ a {
     border: 1px dashed rgba(255, 255, 255, 0.1);
     background-color: rgba(17, 24, 39, 0.4);
     cursor: default;
+    opacity: 0.5;
 }
 
 .coming-soon:hover {
@@ -498,22 +629,6 @@ a {
     z-index: 1;
 }
 
-/* Code line styles for the code reveal effect */
-.code-container {
-    font-family: 'JetBrains Mono', monospace;
-    color: #a3acb9;
-    font-size: 0.8rem;
-    text-align: left;
-    width: 90%;
-    max-height: 90%;
-    overflow: hidden;
-}
-
-.code-line {
-    margin-bottom: 0.2rem;
-    white-space: pre;
-}
-
 /* Footer */
 footer {
     text-align: center;
@@ -550,6 +665,13 @@ footer {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+}
+
+/* Enhanced glow effects */
+@keyframes glow-pulse {
+    0% { box-shadow: 0 0 5px var(--accent-glow); }
+    50% { box-shadow: 0 0 15px var(--accent-glow), 0 0 30px var(--accent-glow); }
+    100% { box-shadow: 0 0 5px var(--accent-glow); }
 }
 
 /* Responsive Styles */
@@ -604,6 +726,11 @@ footer {
     .project-content {
         padding: 2rem;
     }
+
+    /* Reduce number of background cells on mobile */
+    .bg-cell:nth-child(odd) {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
@@ -637,5 +764,10 @@ footer {
     .game-placeholder,
     .project-placeholder {
         font-size: 1.2rem;
+    }
+
+    /* Further reduce background cells on small mobile */
+    .bg-cell:nth-child(3n) {
+        display: none;
     }
 } 

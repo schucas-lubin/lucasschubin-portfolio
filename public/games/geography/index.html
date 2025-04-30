@@ -30,9 +30,54 @@
             <p>A country-naming challenge against the clock</p>
         </div>
         
-        <div class="game-content reveal-element">
-            <p class="game-placeholder">Game content coming soon!</p>
+        <div class="geo-game-container reveal-element">
+            <div class="geo-game-header">
+                <div class="game-title">Geography Sprint</div>
+                <div class="timer-settings">
+                    <button class="timer-button decrease-time">↑</button>
+                    <div class="timer-display">
+                        <span id="timer-value">60</span>s
+                    </div>
+                    <button class="timer-button increase-time">↓</button>
+                </div>
+                <div id="timer-progress" class="timer-progress">
+                    <div class="timer-progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="geo-game-content">
+                <div class="earth-container">
+                    <div class="earth-graphic">
+                        <!-- Pixel-style Earth graphic -->
+                        <div class="earth-pixel"></div>
+                    </div>
+                    <div class="current-letter-display">
+                        <span id="current-letter">A</span>
+                    </div>
+                </div>
+                
+                <div class="countries-list">
+                    <h3>Countries Named <span id="countries-counter">0/0</span></h3>
+                    <ul id="named-countries"></ul>
+                </div>
+            </div>
+            
+            <div class="geo-game-input">
+                <form id="country-form">
+                    <input type="text" id="country-input" placeholder="Type a country name...">
+                    <button type="submit" id="submit-button">Enter</button>
+                </form>
+            </div>
+            
+            <div id="game-results" class="game-results">
+                <h2>Game Over!</h2>
+                <p id="results-message"></p>
+                <div id="missed-countries"></div>
+                <button id="play-again-button">Play Again</button>
+            </div>
         </div>
+        
+        <div id="country-hints" class="country-hints"></div>
     </main>
 
     <footer class="reveal-element">
@@ -40,6 +85,6 @@
     </footer>
     
     <script src="../../scripts.js"></script>
-    <script src="geographyGame.js"></script>
+    <script type="module" src="geographyGame.js"></script>
 </body>
 </html>
