@@ -44,7 +44,7 @@ function initRevealAnimations() {
                 // Add a small delay for visual interest
                 setTimeout(() => {
                     animateTileWithCodeTyping(tile);
-                }, 300 + Math.random() * 500); // Random delay between 300-800ms
+                }, 100 + Math.random() * 200); // Reduced delay between 100-300ms
                 
                 tilesObserver.unobserve(tile);
             }
@@ -94,7 +94,7 @@ function animateTileWithCodeTyping(tile) {
                 tile.style.filter = 'none';
                 tile.style.opacity = '1';
                 tile.classList.add('visible');
-            }, 300);
+            }, 150); // Reduced from 200ms
         });
     }
 }
@@ -127,15 +127,15 @@ function initCtaButtonsTypingEffect() {
                     setTimeout(() => {
                         button.style.visibility = 'visible';
                         button.style.opacity = '1';
-                    }, index * 200);
+                    }, index * 100); // Reduced from 150ms
                 });
                 
                 setTimeout(() => {
                     typingContainer.remove();
-                }, ctaButtons.length * 200 + 300);
-            }, 500);
+                }, ctaButtons.length * 100 + 150); // Reduced from 200ms
+            }, 200); // Reduced from 300ms
         });
-    }, 800); // Delay to allow for hero section to animate
+    }, 300); // Reduced from 500ms
 }
 
 // Generate code for buttons
@@ -184,7 +184,7 @@ function initCodeTypingEffect() {
                     setTimeout(() => {
                         codeReveal.style.opacity = '0';
                         codeReveal.style.zIndex = '-1';
-                    }, 300);
+                    }, 200); // Reduced from 300ms
                 });
             }
         });
@@ -263,11 +263,11 @@ function typeCode(element, codeLines, callback) {
             if (charIndex < currentLine.length) {
                 lineElement.textContent += currentLine.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeChar, 5 + Math.random() * 10);
+                setTimeout(typeChar, 1 + Math.random() * 3); // Reduced from 5-15ms to 1-4ms
             } else {
                 charIndex = 0;
                 lineIndex++;
-                setTimeout(typeLine, 50);
+                setTimeout(typeLine, 20); // Reduced from 50ms to 20ms
             }
         }
         
@@ -433,8 +433,8 @@ function pulseCell(cell) {
         glow.style.opacity = '0';
         setTimeout(() => {
             glow.remove();
-        }, 500);
-    }, 400);
+        }, 350); // Reduced from 500ms
+    }, 300); // Reduced from 400ms
 }
 
 // Smooth scrolling for navigation links

@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsMessage: document.getElementById('results-message'),
         missedCountries: document.getElementById('missed-countries'),
         playAgainButton: document.getElementById('play-again-button'),
-        countryHints: document.getElementById('country-hints')
+        countryHints: document.getElementById('country-hints'),
+        randomLetterBtn: document.getElementById('random-letter-btn'),
+        timerRingFill: document.querySelector('.timer-ring-fill')
     };
 
     // Initialize game with selected letter
@@ -61,8 +63,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear any existing hints
         elements.countryHints.innerHTML = '';
         
+        // Reset timer ring color
+        updateTimerRing();
+        
         // Focus the input field
         elements.countryInput.focus();
+    }
+
+    // Get a random letter that has countries
+    function getRandomLetter() {
+        const availableLetters = Object.keys(countriesByLetter).filter(
+            letter => countriesByLetter[letter].length > 0
+        );
+        
+        const randomIndex = Math.floor(Math.random() * availableLetters.length);
+        return availableLetters[randomIndex];
     }
 
     // Start the game
@@ -77,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.timerInterval = setInterval(() => {
             gameState.timeLeft--;
             updateTimerDisplay();
+            updateTimerRing();
             
             // Show hints halfway through the time if many countries
             if (!gameState.hintsShown && 
@@ -91,6 +107,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 endGame(false);
             }
         }, 1000);
+    }
+
+    // Update the timer ring based on time remaining
+    function updateTimerRing() {
+        const timePercentage = gameState.timeLeft / gameState.baseTime;
+        
+        // Change timer ring color based on time percentage
+        if (timePercentage <= 0.25) {
+            elements.timerRingFill.style.background = 'linear-gradient(to right, #ef4444, #f59e0b)';
+            // Pulse animation for urgency when time is low
+            if (!elements.timerRingFill.classList.contains('urgent')) {
+                elements.timerRingFill.classList.add('urgent');
+            }
+        } else if (timePercentage <= 0.5) {
+            elements.timerRingFill.style.background = 'linear-gradient(to right, #f59e0b, #10b981)';
+            elements.timerRingFill.classList.remove('urgent');
+        } else {
+            elements.timerRingFill.style.background = 'linear-gradient(to right, #10b981, #22d3ee)';
+            elements.timerRingFill.classList.remove('urgent');
+        }
     }
 
     // Update the timer display
@@ -255,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.baseTime = Math.max(gameState.baseTime - 5, 15);
             gameState.timeLeft = gameState.baseTime;
             updateTimerDisplay();
+            updateTimerRing();
         }
     });
     
@@ -263,6 +300,28 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.baseTime = Math.min(gameState.baseTime + 5, 120);
             gameState.timeLeft = gameState.baseTime;
             updateTimerDisplay();
+            updateTimerRing();
+        }
+    });
+    
+    // Random letter button
+    elements.randomLetterBtn.addEventListener('click', () => {
+        if (!gameState.gameActive) {
+            const randomLetter = getRandomLetter();
+            
+            // Add visual feedback when changing letter
+            elements.currentLetterEl.parentElement.classList.add('changing');
+            setTimeout(() => {
+                elements.currentLetterEl.parentElement.classList.remove('changing');
+            }, 500);
+            
+            initGame(randomLetter);
+        } else {
+            // If game is active, provide visual feedback that user needs to finish current game
+            elements.randomLetterBtn.classList.add('disabled');
+            setTimeout(() => {
+                elements.randomLetterBtn.classList.remove('disabled');
+            }, 400);
         }
     });
     

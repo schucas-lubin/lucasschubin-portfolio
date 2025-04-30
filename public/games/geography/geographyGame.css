@@ -13,6 +13,7 @@
     --geo-success: #22c55e;
     --geo-warning: #f59e0b;
     --pixel-size: 4px;
+    --timer-ring-size: 8px;
 }
 
 /* Main game container */
@@ -26,6 +27,62 @@
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     position: relative;
+}
+
+/* Timer ring around the game container */
+.timer-ring {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    border-radius: calc(var(--border-radius) + 4px);
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.timer-ring-fill {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to right, var(--geo-primary), var(--geo-secondary));
+    border-radius: calc(var(--border-radius) + 4px);
+    mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: source-out;
+    padding: var(--timer-ring-size);
+    transform: rotate(0deg);
+    transform-origin: center;
+    transition: background 0.5s ease;
+    animation: pulse 2s infinite alternate;
+}
+
+.timer-ring-fill.urgent {
+    animation: urgentPulse 0.8s infinite alternate;
+}
+
+@keyframes urgentPulse {
+    from {
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        opacity: 0.8;
+    }
+    to {
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px rgba(34, 211, 238, 0.2);
+    }
+    to {
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
+    }
 }
 
 /* Game header with timer */
@@ -46,6 +103,47 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: 'JetBrains Mono', monospace;
+}
+
+/* Letter controls */
+.letter-controls {
+    display: flex;
+    align-items: center;
+}
+
+.random-letter-button {
+    background: linear-gradient(to right, var(--geo-primary), rgba(45, 212, 191, 0.7));
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);
+}
+
+.random-letter-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+}
+
+.random-letter-button:active {
+    transform: translateY(1px);
+}
+
+.random-letter-button.disabled {
+    opacity: 0.6;
+    transform: none;
+    animation: shake 0.4s ease-in-out;
+    pointer-events: none;
+}
+
+.random-letter-button span {
+    font-size: 1.2rem;
 }
 
 .timer-settings {
@@ -185,6 +283,51 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.current-letter-display::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+                rgba(34, 211, 238, 0.2) 0%, 
+                transparent 80%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.current-letter-display.changing::after {
+    animation: letter-flash 0.5s ease-out;
+}
+
+.current-letter-display.changing #current-letter {
+    animation: letter-scale 0.5s ease-out;
+}
+
+@keyframes letter-flash {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes letter-scale {
+    0% { 
+        transform: scale(1); 
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 #current-letter {
@@ -192,6 +335,7 @@
     font-weight: 700;
     color: var(--geo-light);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Countries list section */
@@ -453,6 +597,17 @@
 
 /* Responsive styles */
 @media (max-width: 768px) {
+    .geo-game-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .letter-controls {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+    }
+    
     .geo-game-content {
         flex-direction: column;
         padding: 1.5rem;
@@ -478,6 +633,13 @@
     .game-results h2 {
         font-size: 2rem;
     }
+    
+    .timer-ring {
+        top: -2px;
+        right: -2px;
+        bottom: -2px;
+        left: -2px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -500,5 +662,14 @@
     .earth-graphic {
         width: 120px;
         height: 120px;
+    }
+    
+    .random-letter-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .random-letter-button span {
+        font-size: 1rem;
     }
 } 

@@ -31,14 +31,23 @@
         </div>
         
         <div class="geo-game-container reveal-element">
+            <div class="timer-ring">
+                <div class="timer-ring-fill"></div>
+            </div>
+            
             <div class="geo-game-header">
                 <div class="game-title">Geography Sprint</div>
+                <div class="letter-controls">
+                    <button id="random-letter-btn" class="random-letter-button">
+                        <span>🔀</span> Random Letter
+                    </button>
+                </div>
                 <div class="timer-settings">
-                    <button class="timer-button decrease-time">↑</button>
+                    <button class="timer-button increase-time">↑</button>
                     <div class="timer-display">
                         <span id="timer-value">60</span>s
                     </div>
-                    <button class="timer-button increase-time">↓</button>
+                    <button class="timer-button decrease-time">↓</button>
                 </div>
                 <div id="timer-progress" class="timer-progress">
                     <div class="timer-progress-bar"></div>
