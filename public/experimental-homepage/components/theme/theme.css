@@ -1,0 +1,62 @@
+/*
+ * Theme styles
+ * Contains:
+ * - Color variables for light/dark themes
+ * - Toggle button styling
+ * - Transition properties
+ * - Contextual color applications
+ */
+
+:root {
+  /* Light theme variables */
+  --light-bg: #ffffff;
+  --light-text: #222222;
+  --light-accent: #3a86ff;
+  --light-secondary: #f2f2f2;
+  --light-border: rgba(200, 200, 200, 0.5);
+  --light-shadow: rgba(0, 0, 0, 0.1);
+  
+  /* Dark theme variables */
+  --dark-bg: #111111;
+  --dark-text: #f0f0f0;
+  --dark-accent: #4d9aff;
+  --dark-secondary: #1e1e1e;
+  --dark-border: rgba(80, 80, 80, 0.5);
+  --dark-shadow: rgba(0, 0, 0, 0.25);
+  
+  /* Default theme (light) */
+  --bg: var(--light-bg);
+  --text: var(--light-text);
+  --accent: var(--light-accent);
+  --secondary: var(--light-secondary);
+  --border: var(--light-border);
+  --shadow: var(--light-shadow);
+}
+
+/* Theme transitions */
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Dark theme variables applied */
+body.dark-theme {
+  --bg: var(--dark-bg);
+  --text: var(--dark-text);
+  --accent: var(--dark-accent);
+  --secondary: var(--dark-secondary);
+  --border: var(--dark-border);
+  --shadow: var(--dark-shadow);
+}
+
+/* Transition elements with theme changes */
+.dock-container,
+.dock-icon,
+.tooltip,
+.floating-tile,
+.main-title,
+.clock {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+} 
