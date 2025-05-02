@@ -16,11 +16,7 @@ class FloatingElements {
       { title: 'Project One', description: 'Interactive adventure game with stunning visuals' },
       { title: 'Puzzle Game', description: 'Brain-teasing puzzles with increasing difficulty' },
       { title: 'Web Tool', description: 'Productivity application for developers' },
-      { title: 'Animation Demo', description: 'Showcase of advanced CSS and JS animations' },
-      { title: 'Portfolio', description: 'Collection of my best creative work' },
-      { title: 'Interactive Map', description: 'Geography learning game with global landmarks' },
-      { title: 'Timer App', description: 'Customizable countdown tool with alerts' },
-      { title: 'Photo Gallery', description: 'Dynamic image showcase with filters' }
+      { title: 'Animation Demo', description: 'Showcase of advanced CSS and JS animations' }
     ];
     this.mousePosition = { x: 0, y: 0 };
   }
@@ -45,6 +41,9 @@ class FloatingElements {
         this.tooltip.style.left = `${this.mousePosition.x + 15}px`;
         this.tooltip.style.top = `${this.mousePosition.y + 15}px`;
       }
+      
+      // Subtle parallax effect on tiles
+      this.updateParallax(e);
     });
   }
 
@@ -75,15 +74,52 @@ class FloatingElements {
       // Add event listeners for tooltip
       tile.addEventListener('mouseenter', () => {
         this.showTooltip(i);
+        // Add animation class
+        tile.style.animation = 'glow 2s infinite alternate';
       });
       
       tile.addEventListener('mouseleave', () => {
         this.hideTooltip();
+        // Remove animation
+        tile.style.animation = '';
       });
     }
     
     // Add to DOM
     document.body.appendChild(this.container);
+  }
+  
+  updateParallax(e) {
+    if (!this.tiles.length) return;
+    
+    const mouseX = e.clientX / window.innerWidth;
+    const mouseY = e.clientY / window.innerHeight;
+    
+    this.tiles.forEach((tile, index) => {
+      // Different parallax factor for each tile
+      const factorX = (index % 2 === 0) ? -10 : 10;
+      const factorY = (index % 3 === 0) ? -10 : 10;
+      
+      const offsetX = (mouseX - 0.5) * factorX;
+      const offsetY = (mouseY - 0.5) * factorY;
+      
+      // Apply subtle movement
+      tile.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      
+      // Reset transform on hover to avoid conflicts with hover effect
+      tile.addEventListener('mouseenter', () => {
+        tile.style.transform = '';
+      });
+      
+      tile.addEventListener('mouseleave', () => {
+        // Reapply parallax after hover
+        setTimeout(() => {
+          const offsetX = (mouseX - 0.5) * factorX;
+          const offsetY = (mouseY - 0.5) * factorY;
+          tile.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }, 300);
+      });
+    });
   }
   
   showTooltip(index) {

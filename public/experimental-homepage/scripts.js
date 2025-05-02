@@ -21,7 +21,7 @@ class App {
       { id: 'games', icon: 'game', url: '/games/index.html' },
       { id: 'user', icon: 'user', url: '/about' },
       { id: 'tools', icon: 'tools', url: '/projects/index.html' },
-      { id: 'home', icon: 'home', url: '/' }
+      { id: 'home', icon: 'home', url: '/index.html' }
     ];
   }
 

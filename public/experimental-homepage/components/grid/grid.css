@@ -15,6 +15,7 @@
   height: 100vh;
   z-index: 1;
   pointer-events: none;
+  opacity: 0.7;
 }
 
 .grid {
@@ -28,10 +29,10 @@
 .grid-cell {
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(220, 220, 220, 0.05);
   position: relative;
   pointer-events: auto;
-  transition: background-color 300ms ease;
+  transition: background-color 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .grid-cell::after {
@@ -41,11 +42,24 @@
   right: 0;
   width: 2px;
   height: 2px;
-  background-color: rgba(150, 150, 150, 0.3);
+  background-color: rgba(150, 150, 150, 0.15);
   transform: translate(50%, 50%);
 }
 
 .grid-cell:hover {
-  background-color: rgba(125, 140, 255, 0.15);
-  transition: background-color 300ms ease;
+  background-color: rgba(100, 110, 255, 0.1);
+  transition: background-color 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Dark theme adjustments */
+body.dark-theme .grid-cell {
+  border-color: rgba(50, 50, 50, 0.1);
+}
+
+body.dark-theme .grid-cell::after {
+  background-color: rgba(80, 80, 80, 0.2);
+}
+
+body.dark-theme .grid-cell:hover {
+  background-color: rgba(100, 120, 255, 0.15);
 } 
